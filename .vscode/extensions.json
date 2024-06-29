@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "tamasfe.even-better-toml",
+    "wayou.vscode-todo-highlight",
+    "darkriszty.markdown-table-prettify",
+    "vscode-icons-team.vscode-icons",
+    "redhat.vscode-yaml",
+    "ms-vscode.makefile-tools",
+    "a5huynh.vscode-ron"
+  ]
+}

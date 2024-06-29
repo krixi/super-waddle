@@ -1,0 +1,35 @@
+{
+    // Editor
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.meta": "ron"
+    },
+    // Files
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+        "editor.formatOnSaveMode": "file",
+    },
+    "[json]": {
+        "editor.indentSize": 2,
+    },
+    // configure import style
+    "rust-analyzer.imports.prefix": "crate",
+    "rust-analyzer.imports.granularity.enforce": true,
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    // Utility
+    "todohighlight.keywords": [
+        {
+            "text": "WARN",
+            "backgroundColor": "#f4406c",
+            "color": "#ffffff",
+            "overviewRulerColor": "#272822"
+        },
+        {
+            "text": "TODO",
+            "backgroundColor": "#2757db",
+            "color": "#ffffff",
+            "overviewRulerColor": "#12e09c",
+        }
+    ],
+}
