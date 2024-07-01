@@ -9,6 +9,7 @@ use bevy_asset_loader::{
 
 use crate::{
     assets::GameConfig,
+    enemy::{EnemySet, PickFlower},
     input::{InputSet, InputState},
     GameState,
 };
@@ -23,9 +24,11 @@ impl Plugin for PlayerPlugin {
         .add_systems(OnEnter(GameState::Gaming), spawn_player)
         .add_systems(
             Update,
-            move_player
-                .run_if(in_state(GameState::Gaming))
-                .after(InputSet::ReadInput),
+            (
+                move_player.after(InputSet::ReadInput),
+                count_picked_flowers.after(EnemySet::Collisions),
+            )
+                .run_if(in_state(GameState::Gaming)),
         );
     }
 }
@@ -33,8 +36,11 @@ impl Plugin for PlayerPlugin {
 #[derive(Default, Component)]
 pub struct Player;
 
+#[derive(Debug, Component, Deref, DerefMut)]
+pub struct FlowerCount(pub i32);
+
 #[derive(AssetCollection, Resource)]
-pub struct PlayerAssets {
+struct PlayerAssets {
     #[asset(path = "sprites/goose.png")]
     goose: Handle<Image>,
 }
@@ -42,6 +48,7 @@ pub struct PlayerAssets {
 fn spawn_player(mut commands: Commands, assets: Res<PlayerAssets>) {
     commands.spawn((
         Player,
+        FlowerCount(0),
         SpriteBundle {
             texture: assets.goose.clone(),
             ..default()
@@ -73,4 +80,16 @@ fn move_player(
     ));
 
     *player = transform;
+}
+
+fn count_picked_flowers(
+    mut player: Query<&mut FlowerCount, With<Player>>,
+    mut events: EventReader<PickFlower>,
+) {
+    let Ok(mut player) = player.get_single_mut() else {
+        return;
+    };
+    for _ in events.read() {
+        player.0 += 1;
+    }
 }

@@ -41,6 +41,7 @@ pub struct GameConfigFile {
     pub player_move_speed: f32,
     pub world_size: f32,
     pub num_flowers: u32,
+    pub flower_pickup_range: f32,
 }
 
 // This simplifies loading the config data into a system

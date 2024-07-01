@@ -10,16 +10,29 @@ use bevy_asset_loader::{
 };
 use rand::{thread_rng, Rng};
 
-use crate::{assets::GameConfig, GameState};
+use crate::{assets::GameConfig, player::Player, GameState};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, SystemSet)]
+pub enum EnemySet {
+    Collisions,
+}
 
 pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app.configure_loading_state(
-            LoadingStateConfig::new(GameState::Loading).load_collection::<EnemyAssets>(),
-        )
-        .add_systems(OnEnter(GameState::Gaming), init_flowers);
+        app.add_event::<PickFlower>()
+            .configure_loading_state(
+                LoadingStateConfig::new(GameState::Loading).load_collection::<EnemyAssets>(),
+            )
+            .add_systems(OnEnter(GameState::Gaming), init_flowers)
+            .add_systems(
+                Update,
+                (detect_proximity, despawn_flower_when_picked)
+                    .chain()
+                    .in_set(EnemySet::Collisions)
+                    .run_if(in_state(GameState::Gaming)),
+            );
     }
 }
 
@@ -62,5 +75,38 @@ fn init_flowers(mut commands: Commands, config: GameConfig, assets: Res<EnemyAss
                 ..default()
             },
         ));
+    }
+}
+
+#[derive(Debug, Event)]
+pub struct PickFlower(pub Entity);
+
+fn detect_proximity(
+    config: GameConfig,
+    player: Query<&Transform, With<Player>>,
+    enemies: Query<(Entity, &Transform), With<Enemy>>,
+    mut events: EventWriter<PickFlower>,
+) {
+    let Ok(player) = player.get_single() else {
+        return;
+    };
+
+    let Some(config) = config.get() else {
+        return;
+    };
+
+    for (enemy, transform) in &enemies {
+        let dist_squared = player.translation.distance_squared(transform.translation);
+        let min_dist = config.flower_pickup_range * config.flower_pickup_range;
+
+        if dist_squared <= min_dist {
+            events.send(PickFlower(enemy));
+        }
+    }
+}
+
+fn despawn_flower_when_picked(mut commands: Commands, mut events: EventReader<PickFlower>) {
+    for event in events.read() {
+        commands.entity(event.0).despawn_recursive();
     }
 }

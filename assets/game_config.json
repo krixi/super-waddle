@@ -1,5 +1,6 @@
 {
     "player_move_speed": 250,
     "world_size": 1024,
-    "num_flowers": 500
+    "num_flowers": 500,
+    "flower_pickup_range": 16
 }

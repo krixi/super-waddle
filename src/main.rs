@@ -3,13 +3,14 @@ pub mod camera;
 pub mod enemy;
 pub mod input;
 pub mod player;
+pub mod ui;
 
 use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
 
 use crate::{
     assets::AssetsPlugin, camera::CameraPlugin, enemy::EnemyPlugin, input::InputPlugin,
-    player::PlayerPlugin,
+    player::PlayerPlugin, ui::UiPlugin,
 };
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash, States)]
@@ -44,6 +45,7 @@ fn main() {
         EnemyPlugin,
         InputPlugin,
         PlayerPlugin,
+        UiPlugin,
     ));
 
     // Run the game loop

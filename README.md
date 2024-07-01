@@ -35,7 +35,7 @@ Game programming requires you to write code that ultimately renders a frame to t
 ## Step 3: Read keyboard input, and move the player in response
 
 Bevy uses its event system to send input from devices such as the keyboard, mouse, gamepad, etc...
-In this step, we introduce our own type of input event to decouple the key bindings. 
+In this step, we store the input in a resource so we can easily read the state of it from other systems. 
 We also spawn some flowers so that we can see the movement happening. 
 
 
@@ -50,4 +50,10 @@ Once there, we run the app only to find that now there's an ordering dependency 
 To fix, we introduce the usage of [`bevy_asset_loader`](https://github.com/NiklasEi/bevy_asset_loader) and leverage its ability to hook into bevy's [`State`](https://github.com/bevyengine/bevy/blob/latest/examples/ecs/state.rs) construct. 
 
 As a bonus, bevy asset loader allows us to decouple the configuration of the assets, so that each plugin can declare its own assets that it depends upon without knowing about the others. 
+
+## Step 5: Player & Enemy interaction, UI basics, & sustainable game architecture
+
+In this step, we add some game to this game, by making it so the player picks up flowers when they get in range. We add a [text UI](https://github.com/bevyengine/bevy/blob/latest/examples/ui/text.rs) to display the number of flowers picked. 
+
+This demonstrates the usage of Queries to select and iterate over entities, [events](https://docs.rs/bevy/latest/bevy/ecs/event/index.html) to decouple behavior and fanout notifications, and [change-tracking query filters](https://docs.rs/bevy/latest/bevy/ecs/prelude/struct.Changed.html) to build a UI decoupled from the counting behavior. 
 
