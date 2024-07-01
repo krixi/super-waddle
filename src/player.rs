@@ -5,11 +5,6 @@ use crate::{
     input::{InputEvent, InputSet},
 };
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, SystemSet)]
-pub enum PlayerSet {
-    Move,
-}
-
 pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
@@ -46,8 +41,9 @@ fn move_player(
         };
 
         let transform = player.mul_transform(Transform::from_translation(
-            (direction * 10.0f32).extend(1.0f32),
+            (direction * 10.0f32).extend(0.0f32),
         ));
+
         *player = transform;
     }
 }
