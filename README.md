@@ -37,3 +37,17 @@ Game programming requires you to write code that ultimately renders a frame to t
 Bevy uses its event system to send input from devices such as the keyboard, mouse, gamepad, etc...
 In this step, we introduce our own type of input event to decouple the key bindings. 
 We also spawn some flowers so that we can see the movement happening. 
+
+
+## Step 4: More advanced asset loading and game state organization
+
+In this step, we get tired of waiting to recompile to change magic numbers like _player speed_ and _num flowers_. So, we implement a custom type of AssetLoader that uses `serde_json` to read a json file. 
+In doing so, we learn about the importance of plugin initialization order (put the default plugins first, then any 3p libraries, then your own code).  
+We use an advanced technique called a [`SystemParam`](https://github.com/bevyengine/bevy/blob/latest/examples/ecs/system_param.rs), which allows us to implement a struct that we can use to easily read values out of the config file in other systems. 
+
+Once there, we run the app only to find that now there's an ordering dependency between loading the config file, and the systems that initialize the player and flowers (symptom being that the flowers failed to spawn👎). 
+
+To fix, we introduce the usage of [`bevy_asset_loader`](https://github.com/NiklasEi/bevy_asset_loader) and leverage its ability to hook into bevy's [`State`](https://github.com/bevyengine/bevy/blob/latest/examples/ecs/state.rs) construct. 
+
+As a bonus, bevy asset loader allows us to decouple the configuration of the assets, so that each plugin can declare its own assets that it depends upon without knowing about the others. 
+
