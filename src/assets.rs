@@ -42,6 +42,7 @@ pub struct GameConfigFile {
     pub world_size: f32,
     pub num_flowers: u32,
     pub flower_pickup_range: f32,
+    pub game_time_seconds: f32,
 }
 
 // This simplifies loading the config data into a system

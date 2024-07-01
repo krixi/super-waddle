@@ -1,6 +1,7 @@
 pub mod assets;
 pub mod camera;
 pub mod enemy;
+pub mod game;
 pub mod input;
 pub mod player;
 pub mod ui;
@@ -9,8 +10,8 @@ use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
 
 use crate::{
-    assets::AssetsPlugin, camera::CameraPlugin, enemy::EnemyPlugin, input::InputPlugin,
-    player::PlayerPlugin, ui::UiPlugin,
+    assets::AssetsPlugin, camera::CameraPlugin, enemy::EnemyPlugin, game::GamePlugin,
+    input::InputPlugin, player::PlayerPlugin, ui::UiPlugin,
 };
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash, States)]
@@ -43,6 +44,7 @@ fn main() {
         AssetsPlugin,
         CameraPlugin,
         EnemyPlugin,
+        GamePlugin,
         InputPlugin,
         PlayerPlugin,
         UiPlugin,

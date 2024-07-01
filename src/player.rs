@@ -10,6 +10,7 @@ use bevy_asset_loader::{
 use crate::{
     assets::GameConfig,
     enemy::{EnemySet, PickFlower},
+    game::GameObject,
     input::{InputSet, InputState},
     GameState,
 };
@@ -49,6 +50,7 @@ fn spawn_player(mut commands: Commands, assets: Res<PlayerAssets>) {
     commands.spawn((
         Player,
         FlowerCount(0),
+        GameObject,
         SpriteBundle {
             texture: assets.goose.clone(),
             ..default()

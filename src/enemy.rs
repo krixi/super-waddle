@@ -10,7 +10,7 @@ use bevy_asset_loader::{
 };
 use rand::{thread_rng, Rng};
 
-use crate::{assets::GameConfig, player::Player, GameState};
+use crate::{assets::GameConfig, game::GameObject, player::Player, GameState};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, SystemSet)]
 pub enum EnemySet {
@@ -69,6 +69,7 @@ fn init_flowers(mut commands: Commands, config: GameConfig, assets: Res<EnemyAss
 
         commands.spawn((
             Enemy,
+            GameObject,
             SpriteBundle {
                 transform: Transform::from_translation(Vec3::new(x, y, 0.)).with_rotation(rot),
                 texture: assets.spike_flower.clone(),

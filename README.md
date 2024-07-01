@@ -57,3 +57,7 @@ In this step, we add some game to this game, by making it so the player picks up
 
 This demonstrates the usage of Queries to select and iterate over entities, [events](https://docs.rs/bevy/latest/bevy/ecs/event/index.html) to decouple behavior and fanout notifications, and [change-tracking query filters](https://docs.rs/bevy/latest/bevy/ecs/prelude/struct.Changed.html) to build a UI decoupled from the counting behavior. 
 
+## Step 6: Add a countdown timer and end-of-game scoring
+
+This adds a new plugin that advances states once the timer runs out. It also includes an example of handling interactions on a Bevy UI Button.
+
