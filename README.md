@@ -31,3 +31,9 @@ Game programming requires you to write code that ultimately renders a frame to t
     - You can also use a `SystemSet` to declare system-ordering level dependencies across plugins, if necessary.
 - You can use states to organize and coordinate game logic
     - Example: `Loading`, `Gaming`, `GameOver`
+
+## Step 3: Read keyboard input, and move the player in response
+
+Bevy uses its event system to send input from devices such as the keyboard, mouse, gamepad, etc...
+In this step, we introduce our own type of input event to decouple the key bindings. 
+We also spawn some flowers so that we can see the movement happening. 
