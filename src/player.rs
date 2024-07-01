@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     assets::{AssetHandles, AssetsSet},
-    input::{InputEvent, InputSet},
+    input::{InputSet, InputState},
 };
 
 pub struct PlayerPlugin;
@@ -27,23 +27,25 @@ fn spawn_player(mut commands: Commands, assets: Res<AssetHandles>) {
     ));
 }
 
+const PLAYER_MOVE_SPEED: f32 = 25.;
+
 fn move_player(
-    mut input_events: EventReader<InputEvent>,
+    time: Res<Time>,
+    input: Res<InputState>,
     mut player: Query<&mut Transform, With<Player>>,
 ) {
     let Ok(mut player) = player.get_single_mut() else {
         return;
     };
 
-    for event in input_events.read() {
-        let Some(direction) = event.direction() else {
-            continue;
-        };
-
-        let transform = player.mul_transform(Transform::from_translation(
-            (direction * 10.0f32).extend(0.0f32),
-        ));
-
-        *player = transform;
+    let direction = input.normalized_direction();
+    if direction == Vec2::ZERO {
+        return;
     }
+
+    let transform = player.mul_transform(Transform::from_translation(
+        (direction * PLAYER_MOVE_SPEED * time.delta_seconds()).extend(0.0f32),
+    ));
+
+    *player = transform;
 }

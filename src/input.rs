@@ -1,4 +1,8 @@
-use bevy::{input::keyboard::KeyboardInput, prelude::*};
+use bevy::{
+    input::{keyboard::KeyboardInput, ButtonState},
+    prelude::*,
+    utils::HashMap,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, SystemSet)]
 pub enum InputSet {
@@ -9,7 +13,7 @@ pub struct InputPlugin;
 
 impl Plugin for InputPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<InputEvent>()
+        app.init_resource::<InputState>()
             .add_systems(Update, process_keyboard_input.in_set(InputSet::ReadInput));
     }
 }
@@ -23,7 +27,16 @@ pub enum Input {
 }
 
 impl Input {
-    pub fn direction(&self) -> Option<Vec2> {
+    fn movement() -> &'static [Input] {
+        &[
+            Input::MoveLeft,
+            Input::MoveRight,
+            Input::MoveUp,
+            Input::MoveDown,
+        ]
+    }
+
+    fn direction(&self) -> Option<Vec2> {
         match self {
             Input::MoveLeft => Some(Vec2::NEG_X),
             Input::MoveRight => Some(Vec2::X),
@@ -33,13 +46,27 @@ impl Input {
     }
 }
 
-#[derive(Debug, Deref, DerefMut, Event)]
-pub struct InputEvent(pub Input);
+#[derive(Default, Debug, Resource)]
+pub struct InputState {
+    buttons: HashMap<Input, bool>,
+}
 
-fn process_keyboard_input(
-    mut keyboard: EventReader<KeyboardInput>,
-    mut writer: EventWriter<InputEvent>,
-) {
+impl InputState {
+    pub fn normalized_direction(&self) -> Vec2 {
+        Input::movement()
+            .iter()
+            .filter(|input| self.buttons.get(*input).copied().unwrap_or(false))
+            .filter_map(|input| input.direction())
+            .sum::<Vec2>()
+            .normalize_or_zero()
+    }
+
+    pub fn get(&self, input: Input) -> bool {
+        self.buttons.get(&input).copied().unwrap_or(false)
+    }
+}
+
+fn process_keyboard_input(mut state: ResMut<InputState>, mut keyboard: EventReader<KeyboardInput>) {
     for event in keyboard.read() {
         let input = match event.key_code {
             KeyCode::KeyA => Input::MoveLeft,
@@ -49,6 +76,11 @@ fn process_keyboard_input(
             _ => continue,
         };
 
-        writer.send(InputEvent(input));
+        let pressed = match event.state {
+            ButtonState::Pressed => true,
+            ButtonState::Released => false,
+        };
+
+        state.buttons.insert(input, pressed);
     }
 }
