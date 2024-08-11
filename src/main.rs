@@ -1,10 +1,13 @@
-pub mod assets;
-pub mod camera;
-pub mod enemy;
-pub mod game;
-pub mod input;
-pub mod player;
-pub mod ui;
+#![allow(clippy::type_complexity)]
+#![allow(clippy::too_many_arguments)]
+
+mod assets;
+mod camera;
+mod enemy;
+mod game;
+mod input;
+mod player;
+mod ui;
 
 use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
